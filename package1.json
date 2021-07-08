@@ -7,7 +7,8 @@
     "config-handler": "^2.0.3",
     "ejs": "3.1.5",
     "express": "^4.17.1",
-    "express-fileupload": "^1.2.1"
+    "express-fileupload": "^1.2.1",
+    "squirrelly": "^8.0.8"
   },
   "devDependencies": {},
   "scripts": {

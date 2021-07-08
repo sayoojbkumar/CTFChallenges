@@ -1,12 +1,12 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
-const ejs = require('ejs');
 const fs = require("fs");
+const sqrl = require('squirrelly');
 const app = express();
-port = 8080
+port = 8083
 
-
-app.set('view engine', 'ejs');
+app.use(express.static('static'));
+app.set('view engine', 'squirrelly');
 app.set('views', __dirname + '/views')
 app.use(fileUpload());
 
@@ -15,7 +15,7 @@ app.get('/waf', function (req, res) {
 });
 
 app.get('/', function (req, res) {
-    res.sendFile(__dirname+'/static/upload.html');
+    res.sendFile(__dirname+'/static/index.html');
 });
 
 app.post('/upload', function(req, res) {
@@ -34,7 +34,36 @@ app.post('/upload', function(req, res) {
         if (err)
             return res.status(500).send(err);
         const config = require('config-handler')();
-        console.log(config['version'],config['name'],config['author'],config['license'],config['dependencies'])
+        var output='\n';
+        if(config['name']){
+            output=output+'Package name is:'+config['name']+'\n\n';
+        }
+        if(config['version']){
+            output=output+ "version is :"+ config['version']+'\n\n'
+        }
+        if(config['author']){
+            output=output+"Author of package:"+config['author']+'\n\n'
+        }
+        if(config['license']){
+            var link=''
+            if(config['license']==='ISC'){
+                link='https://opensource.org/licenses/ISC'+'\n\n'
+            }
+            if(config['license']==='MIT'){
+                link='https://www.opensource.org/licenses/mit-license.php'+'\n\n'
+            }
+            if(config['license']==='Apache-2.0'){
+                link='https://opensource.org/licenses/apache2.0.php'+'\n\n'
+            }
+            if(link==''){
+                var link='https://opensource.org/licenses/'+'\n\n'
+            }
+            output=output+'license :'+config['license']+'\n\n'+'find more details here :'+link;
+        }
+        if(config['dependencies']){
+            output=output+"following dependencies are thier corresponding versions are used:" +'\n\n'+'     '+JSON.stringify(config['dependencies'])+'\n'
+        }
+
         const src = "package1.json";
         const dest = "package.json";
         fs.copyFile(src, dest, (error) => {
@@ -44,7 +73,7 @@ app.post('/upload', function(req, res) {
             }
             console.log("Copied Successfully!");
         });
-        res.render('test.ejs')
+        res.render('index.squirrelly', {'output':output})
     });
 });
 
