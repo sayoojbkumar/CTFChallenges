@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS
 import ujson
 import json
 import re
@@ -6,6 +7,13 @@ import os
 
 os.environ['subscription_code'] = '673307-0496-8812'
 app=Flask(__name__)
+cors = CORS(app)
+CORS(app)
+cors = CORS(app, resources={
+    r"/verify_roles": {
+       "origins": "*"
+    }
+})
 
 @app.route('/verify_roles',methods=['GET','POST'])
 def verify_roles():
@@ -36,4 +44,4 @@ def verify_roles():
         return "no subscription for you"
 
 if __name__=='__main__':
-    app.run(host='0.0.0.0',port=5555,debug=True)#http://localhost:5555/verify_roles?role=supersuperuseruser\ud800%22,%22name%22:%22admin
+    app.run(host='0.0.0.0',port=5555)#http://localhost:5555/verify_roles?role=supersuperuseruser\ud800%22,%22name%22:%22admin

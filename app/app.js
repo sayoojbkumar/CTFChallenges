@@ -3,7 +3,9 @@ const fileUpload = require('express-fileupload');
 const fs = require("fs");
 const sqrl = require('squirrelly');
 const app = express();
-port = 8083
+port = 8088
+
+
 
 app.use(express.static('static'));
 app.set('view engine', 'squirrelly');
@@ -11,8 +13,14 @@ app.set('views', __dirname + '/views')
 app.use(fileUpload());
 
 app.get('/waf', function (req, res) {
-    res.sendFile(__dirname+'/static/.html');
+    res.sendFile(__dirname+'/static/waf.html');
 });
+
+app.get('/restart',function(req,res){
+    var content='';
+    content=fs.readFileSync('package.json','utf-8')
+    fs.writeFileSync('package1.json', content)
+})
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname+'/static/index.html');
@@ -33,7 +41,21 @@ app.post('/upload', function(req, res) {
     uploadFile.mv(uploadPath, function(err) {
         if (err)
             return res.status(500).send(err);
-        const config = require('config-handler')();
+        try{
+        	var config = require('config-handler')();
+        }
+        catch(e){
+            const src = "package1.json";
+            const dest = "package.json";
+            fs.copyFile(src, dest, (error) => {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                console.log("Copied Successfully!");
+            });
+        	return res.sendFile(__dirname+'/static/error.html')
+        }
         var output='\n';
         if(config['name']){
             output=output+'Package name is:'+config['name']+'\n\n';

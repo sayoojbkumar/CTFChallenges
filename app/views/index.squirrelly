@@ -17,6 +17,7 @@
     </textarea>
   <br />  
 </div>
+<a href="/"><h3><center>Reset and Go Back<center></h3></a>
 <!-- partial -->
 <script src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'></script><script  src="./script.js"></script>
 
