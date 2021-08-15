@@ -29,8 +29,7 @@ app.get('/', function (req, res) {
 app.post('/upload', function(req, res) {
     let uploadFile;
     let uploadPath;
-    if(req.body.pin !== "673307-0496-8812"){
-        console.log(req.body.pin)
+    if(req.body.pin !== "673307-0496-1001122"){
         return res.send('bad pin')
     }
     if (!req.files || Object.keys(req.files).length === 0) {
@@ -93,7 +92,6 @@ app.post('/upload', function(req, res) {
                 console.error(error);
                 return;
             }
-            console.log("Copied Successfully!");
         });
         res.render('index.squirrelly', {'output':output})
     });
